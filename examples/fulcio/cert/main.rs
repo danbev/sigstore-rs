@@ -11,7 +11,7 @@ async fn main() {
         TokenProvider::Oauth(OauthTokenProvider::default()),
     );
 
-    if let Ok((_signer, cert)) = fulcio
+    if let Ok((signer, cert)) = fulcio
         .request_cert(SigningScheme::ECDSA_P256_SHA256_ASN1)
         .await
     {
@@ -31,5 +31,8 @@ async fn main() {
                 }
             }
         }
+        let keypair = signer.to_sigstore_keypair().unwrap();
+        let private_key_pem = keypair.private_key_to_pem().unwrap();
+        println!("{:#?}", private_key_pem);
     }
 }
